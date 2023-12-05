@@ -1,17 +1,20 @@
 package com.nwafu.cattakeout.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.nwafu.cattakeout.common.Result;
 import com.nwafu.cattakeout.pojo.Employee;
 import com.nwafu.cattakeout.service.IEmployeeService;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.DigestUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+
+@Slf4j
 @RestController
 @RequestMapping("/employee")
 public class EmployeeController {
@@ -52,5 +55,62 @@ public class EmployeeController {
     public Result logout(HttpServletRequest request){
         request.getSession().removeAttribute("employee");
         return Result.success("退出成功！");
+    }
+
+    @GetMapping("/page")
+    public Result page(int page,int pageSize,String name){
+        log.info("page = {},pageSize = {},name = {}" ,page,pageSize,name);
+
+        //构造分页构造器
+        Page pageInfo = new Page(page,pageSize);
+
+        //构造条件构造器
+        LambdaQueryWrapper<Employee> queryWrapper = new LambdaQueryWrapper();
+        //添加过滤条件
+        queryWrapper.like(StringUtils.isNotEmpty(name),Employee::getName,name);
+        //添加排序条件
+        queryWrapper.orderByDesc(Employee::getUpdateTime);
+        //执行查询
+        employeeService.page(pageInfo,queryWrapper);
+        return Result.success(pageInfo);
+    }
+
+    /**
+     * 根据id查找员工
+     */
+    @GetMapping("/{id}")
+    public Result getById(@PathVariable Long id){
+        LambdaQueryWrapper<Employee> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Employee::getId,id);
+        Employee emp = employeeService.getOne(queryWrapper);
+        log.info("查询员工：id：{}，员工：{}",id,emp);
+        return Result.success(emp);
+    }
+
+    /**
+     * 修改员工信息
+     */
+    @PutMapping()
+    public Result updateEmp(HttpServletRequest req,@RequestBody Employee employee){
+        Long empId = (Long)req.getSession().getAttribute("employee");
+        employee.setUpdateTime(LocalDateTime.now());
+        employee.setUpdateUser(empId);
+        employeeService.updateById(employee);
+        log.info("修改员工信息：{}",employee);
+        return Result.success();
+    }
+
+    @PostMapping()
+    public Result add(HttpServletRequest req,@RequestBody Employee employee){
+        Long empId = (Long)req.getSession().getAttribute("employee");
+        employee.setCreateTime(LocalDateTime.now());
+        employee.setUpdateTime(LocalDateTime.now());
+        employee.setUpdateUser(empId);
+        employee.setCreateUser(empId);
+        // 默认密码为123456，使用md5加密
+        employee.setPassword(DigestUtils.md5DigestAsHex("123456".getBytes()));
+        log.info("新增员工：{}",employee);
+        employeeService.save(employee);
+        return Result.success();
     }
 }

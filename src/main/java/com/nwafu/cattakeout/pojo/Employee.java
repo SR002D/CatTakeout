@@ -1,6 +1,8 @@
 package com.nwafu.cattakeout.pojo;
 
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -17,4 +19,9 @@ public class Employee {
     private Integer status;      //0为账号禁用
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
+    @TableField(fill = FieldFill.INSERT)
+    private Long createUser;
+
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    private Long updateUser;
 }

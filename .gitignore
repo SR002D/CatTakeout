@@ -1,5 +1,6 @@
-
 target/
+src/main/resources/backend
+src/main/resources/front
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/

@@ -5,12 +5,11 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.nwafu.cattakeout.common.Result;
 import com.nwafu.cattakeout.pojo.Category;
 import com.nwafu.cattakeout.service.ICategoryService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
+
 
 @Slf4j
 @RestController

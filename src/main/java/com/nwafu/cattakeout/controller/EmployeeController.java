@@ -109,8 +109,7 @@ public class EmployeeController {
      * 新增员工
      */
     @PostMapping()
-    public Result add(HttpServletRequest req,@RequestBody Employee employee){
-        Long empId = (Long)req.getSession().getAttribute("employee");
+    public Result add(@RequestBody Employee employee){
         // 默认密码为123456，使用md5加密
         employee.setPassword(DigestUtils.md5DigestAsHex("123456".getBytes()));
         log.info("新增员工：{}",employee);

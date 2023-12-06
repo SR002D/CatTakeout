@@ -15,4 +15,5 @@ mybatis-plus:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   global-config:
     db-config:
-      id-type: ASSIGN_ID
+      # 雪花算法生成主键
+      id-type: assign_id

@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * 返回到前端的统一结果
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

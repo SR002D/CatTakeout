@@ -1,5 +1,6 @@
 package com.nwafu.cattakeout.filter;
 
+import com.nwafu.cattakeout.common.UserHolder;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
@@ -42,6 +43,7 @@ public class LoginFilter implements Filter {
             httpServletResponse.sendRedirect("/backend/page/login/login.html");
         }else{
             log.info("用户名：{}，登录成功",emp);
+            UserHolder.set((Long)emp);
             filterChain.doFilter(servletRequest,servletResponse);
         }
     }

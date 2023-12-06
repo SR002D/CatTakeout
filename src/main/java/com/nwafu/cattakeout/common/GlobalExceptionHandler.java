@@ -6,6 +6,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 
+/**
+ * springboot的全局异常处理器
+ */
 @Slf4j
 @RestController
 public class GlobalExceptionHandler{

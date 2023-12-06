@@ -11,7 +11,9 @@ spring:
     password: "0508"
 mybatis-plus:
   configuration:
+    # 开启驼峰转换
     map-underscore-to-camel-case: true
+    # 打印日志到控制台
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   global-config:
     db-config:

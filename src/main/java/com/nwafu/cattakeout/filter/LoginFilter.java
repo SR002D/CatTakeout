@@ -37,7 +37,6 @@ public class LoginFilter implements Filter {
             return;
         }
 
-
         if(emp==null){
             log.info("未登录，重定向到登录界面");
             httpServletResponse.sendRedirect("/backend/page/login/login.html");

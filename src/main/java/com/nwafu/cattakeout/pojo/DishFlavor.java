@@ -4,20 +4,14 @@ import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
-public class Dish {
+public class DishFlavor {
     private Long id;
+    private Long dishId;
     private String name;
-    private Long categoryId;
-    private BigDecimal price;   //使用BigDecimal计算钱数
-    private String code;        //代码
-    private String image;       //图片
-    private String description;
-    private Integer status;     //状态：0停售，1起售
-    private Integer sort;       //顺序
+    private String value;
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
     @TableField(fill = FieldFill.INSERT_UPDATE)
@@ -26,5 +20,5 @@ public class Dish {
     private Long createUser;
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Long updateUser;
-    private Integer isDeleted;  //是否删除,0未删除
+    private Integer isDeleted;
 }

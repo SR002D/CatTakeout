@@ -6,8 +6,10 @@ import com.nwafu.cattakeout.dto.DishDTO;
 import com.nwafu.cattakeout.pojo.Dish;
 
 public interface IDishService extends IService<Dish> {
-    IPage<DishDTO> selectAllDishDTO(IPage<DishDTO> page);
+    IPage<DishDTO> selectAllDishDTO(IPage<DishDTO> page,String name);
 
     DishDTO getWithFlavorById(Long id);
+
+    void saveWithFlavor(DishDTO dishDTO);
 
 }

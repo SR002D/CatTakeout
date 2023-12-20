@@ -18,6 +18,7 @@
         <java.version>17</java.version>
         <docker.image.prefix>docker-demo</docker.image.prefix>
     </properties>
+
     <dependencies>
             <!--        springboot起步依赖-->
         <dependency>
@@ -58,6 +59,11 @@
             <groupId>com.alibaba</groupId>
             <artifactId>druid-spring-boot-starter</artifactId>
             <version>1.2.16</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
         </dependency>
         <!--        fastjson-->
         <dependency>

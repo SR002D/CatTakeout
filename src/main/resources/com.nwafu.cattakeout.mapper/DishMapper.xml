@@ -9,8 +9,12 @@
         dish. code as code, dish. image as image, dish. description as description, dish. status as status,
         dish.update_time as updateTime ,dish. is_deleted as isDeleted, category .name as categoryName
         from dish, category
-        where dish. category_id = category. id
-
+        <where>
+            dish. category_id = category. id and is_deleted = 0
+            <if test="name != '%null%'">
+                and dish. name like #{name}
+            </if>
+        </where>
     </select>
 
 <!--    <select id="demo22" resultMap="DISH">-->

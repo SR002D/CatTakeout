@@ -9,7 +9,7 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface DishMapper extends BaseMapper<Dish> {
 
-    IPage<DishDTO> selectAllDishDTO(IPage<DishDTO> page);
+    IPage<DishDTO> selectAllDishDTO(IPage<DishDTO> page,String name);
 
 //    @Select("select test1.id, data. id, data. year, data. month     from test1,data    where test1.id = data.test_id")
 //    List<Test> demo22();

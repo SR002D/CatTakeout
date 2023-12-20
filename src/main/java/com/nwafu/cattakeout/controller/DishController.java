@@ -25,28 +25,29 @@ public class DishController {
      * 分页查询
      */
     @GetMapping("/page")
-    public Result page(int page, int pageSize){
+    public Result page(int page, int pageSize, String name){
         Page<DishDTO> pageInfo = new Page<>(page,pageSize);
-
         log.info("分页查询菜品：{}，{}",page,pageSize);
-//        LambdaQueryWrapper<Dish> queryWrapper = new LambdaQueryWrapper<>();
-//        queryWrapper.orderByAsc(Dish::getSort);
-//        dishService.page(pageInfo,queryWrapper);
-        dishService.selectAllDishDTO(pageInfo);
+        dishService.selectAllDishDTO(pageInfo,name);
         log.info("pageInfo:{}",pageInfo);
         return Result.success(pageInfo);
     }
+    /*
+     * 根据名字搜索
+     */
 
     /**
      * 更新菜品状态（起售、停售）
      */
     @PostMapping("/status/{status}")
-    public Result updateStatus(@PathVariable Integer status,Long ids){
+    public Result updateStatus(@PathVariable Integer status,Long[] ids){
         log.info("菜品状态更新：{},{}",ids,status);
         Dish dish = new Dish();
-        dish.setId(ids);
-        dish.setStatus(status);
-        dishService.updateById(dish);
+        for (Long id : ids) {
+            dish.setId(id);
+            dish.setStatus(status);
+            dishService.updateById(dish);
+        }
         return Result.success("更新状态成功");
     }
 
@@ -54,13 +55,15 @@ public class DishController {
      *  删除菜品
      */
     @DeleteMapping()
-    public Result delete(Long ids){
+    public Result delete(Long[] ids){
         log.info("菜品删除：{}",ids);
         Dish dish = new Dish();
-        dish.setId(ids);
-        dish.setIsDeleted(1);
-        dishService.updateById(dish);
-        return Result.success();
+        for(Long i: ids){
+            dish.setId(i);
+            dish.setIsDeleted(1);
+            dishService.updateById(dish);
+        }
+        return Result.success("菜品删除完成");
     }
 
     /**
@@ -68,10 +71,19 @@ public class DishController {
      */
     @PutMapping()
     public Result update(@RequestBody Dish dish){
-        //TODO updateWithFlavor
-//        log.info("更新菜品：{}",dish);
-//        dishService.updateById(dish);
+        log.info("更新菜品：{}",dish);
+        dishService.updateById(dish);
         return Result.success();
+    }
+
+    /**
+     * 新增菜品
+     */
+    @PostMapping
+    public Result save(@RequestBody DishDTO dishDTO){
+        log.info(dishDTO.toString());
+        dishService.saveWithFlavor(dishDTO);
+        return Result.success("新增菜品成功");
     }
 
     /**
@@ -79,17 +91,8 @@ public class DishController {
      */
     @GetMapping("/{id}")
     public Result query(@PathVariable Long id){
-//        LambdaQueryWrapper<Dish> queryWrapper = new LambdaQueryWrapper<>();
-//        queryWrapper.eq(Dish::getId,id);
-//        Dish dish = dishService.getOne(queryWrapper);
-//        log.info("查询菜品：{}",dish);
-//        return Result.success(dish);
-
-        DishDTO dishDto = dishService.getWithFlavorById(id);
-
-        return Result.success(dishDto);
+        DishDTO dishDTO = dishService.getWithFlavorById(id);
+        return Result.success(dishDTO);
     }
-
-
 
 }

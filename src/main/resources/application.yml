@@ -22,3 +22,7 @@ mybatis-plus:
       id-type: assign_id
   # 开启xml文件映射
   mapper-locations: com.nwafu.cattakeout.mapper/DishMapper.xml
+
+cat:
+  path:
+    D:\img\

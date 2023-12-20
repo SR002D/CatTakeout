@@ -29,21 +29,32 @@ public class LoginFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
         HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
-        Object emp = httpServletRequest.getSession().getAttribute("employee");
-        // 登录界面，放行
-        if(httpServletRequest.getRequestURI().contains("login")){
-            log.info("登录界面，放行");
+
+
+        // 测试代码
+        if(1 == 1){
+            Object emp = httpServletRequest.getSession().getAttribute("employee");
+            // 登录界面，放行
+            if(httpServletRequest.getRequestURI().contains("login")){
+                log.info("登录界面，放行");
+                filterChain.doFilter(servletRequest,servletResponse);
+                return;
+            }
+
+            if(emp==null){
+                log.info("未登录，重定向到登录界面");
+                httpServletResponse.sendRedirect("/backend/page/login/login.html");
+            }else{
+                log.info("用户名：{}，登录成功",emp);
+                UserHolder.set((Long)emp);
+                filterChain.doFilter(servletRequest,servletResponse);
+            }
+        }else{
             filterChain.doFilter(servletRequest,servletResponse);
-            return;
+            return ;
         }
 
-        if(emp==null){
-            log.info("未登录，重定向到登录界面");
-            httpServletResponse.sendRedirect("/backend/page/login/login.html");
-        }else{
-            log.info("用户名：{}，登录成功",emp);
-            UserHolder.set((Long)emp);
-            filterChain.doFilter(servletRequest,servletResponse);
-        }
+
+
     }
 }

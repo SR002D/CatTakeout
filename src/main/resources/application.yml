@@ -21,7 +21,7 @@ mybatis-plus:
       # 雪花算法生成主键
       id-type: assign_id
   # 开启xml文件映射
-  mapper-locations: com.nwafu.cattakeout.mapper/DishMapper.xml
+  mapper-locations: com.nwafu.cattakeout.mapper/*.xml
 
 cat:
   path:

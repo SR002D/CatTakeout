@@ -1,15 +1,23 @@
 package com.nwafu.cattakeout.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.nwafu.cattakeout.common.Result;
 import com.nwafu.cattakeout.dto.DishDTO;
+import com.nwafu.cattakeout.pojo.Category;
 import com.nwafu.cattakeout.pojo.Dish;
+import com.nwafu.cattakeout.pojo.DishFlavor;
 import com.nwafu.cattakeout.service.ICategoryService;
+import com.nwafu.cattakeout.service.IDishFlavorService;
 import com.nwafu.cattakeout.service.IDishService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -17,9 +25,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/dish")
 public class DishController {
     @Autowired
-    IDishService dishService;
+    private IDishService dishService;
     @Autowired
-    ICategoryService categoryService;
+    private ICategoryService categoryService;
+    @Autowired
+    private IDishFlavorService dishFlavorService;
 
     /**
      * 分页查询
@@ -56,7 +66,7 @@ public class DishController {
      */
     @DeleteMapping()
     public Result delete(Long[] ids){
-        log.info("菜品删除：{}",ids);
+        log.info("菜品删除：{}", (Object) ids);
         Dish dish = new Dish();
         for(Long i: ids){
             dish.setId(i);
@@ -93,6 +103,47 @@ public class DishController {
     public Result query(@PathVariable Long id){
         DishDTO dishDTO = dishService.getWithFlavorById(id);
         return Result.success(dishDTO);
+    }
+
+    @GetMapping("/list")
+    public Result list(Dish dish){
+        //构造查询条件
+        LambdaQueryWrapper<Dish> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(dish.getCategoryId() != null ,Dish::getCategoryId,dish.getCategoryId());
+        //添加条件，查询状态为1（起售状态）的菜品
+        queryWrapper.eq(Dish::getStatus,1);
+
+        //添加排序条件
+        queryWrapper.orderByAsc(Dish::getSort).orderByDesc(Dish::getUpdateTime);
+
+        List<Dish> list = dishService.list(queryWrapper);
+
+        List<DishDTO> dishDtoList = list.stream().map((item) -> {
+
+            DishDTO dishDTO = new DishDTO();
+
+            BeanUtils.copyProperties(item,dishDTO);
+
+            Long categoryId = item.getCategoryId();//分类id
+            //根据id查询分类对象
+            Category category = categoryService.getById(categoryId);
+
+            if(category != null){
+                String categoryName = category.getName();
+                dishDTO.setCategoryName(categoryName);
+            }
+
+            //当前菜品的id
+            Long dishId = item.getId();
+            LambdaQueryWrapper<DishFlavor> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+            lambdaQueryWrapper.eq(DishFlavor::getDishId,dishId);
+            //SQL:select * from dish_flavor where dish_id = ?
+            List<DishFlavor> dishFlavorList = dishFlavorService.list(lambdaQueryWrapper);
+            dishDTO.setFlavors(dishFlavorList);
+            return dishDTO;
+        }).collect(Collectors.toList());
+
+        return Result.success(dishDtoList);
     }
 
 }

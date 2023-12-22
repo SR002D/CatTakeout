@@ -225,7 +225,7 @@ INSERT INTO `employee` VALUES ('1', '管理员', 'admin', 'e10adc3949ba59abbe56e
 -- ----------------------------
 -- Table structure for orders
 -- ----------------------------
-DROP TABLE IF EXISTS `orders`;
+DROP TABLE IF EXISTS `order`;
 CREATE TABLE `orders` (
   `id` bigint(20) NOT NULL COMMENT '主键',
   `number` varchar(50) COLLATE utf8_bin DEFAULT NULL COMMENT '订单号',

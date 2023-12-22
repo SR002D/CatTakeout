@@ -9,7 +9,7 @@ import java.util.List;
 
 @Data
 public class SetMealDTO extends  SetMeal {
-    private List<SetMealDish> setmealDishes= new ArrayList<>();
+    private List<SetMealDish> setMealDishes= new ArrayList<>();
     private String categoryName;
     private Integer copies;
 }

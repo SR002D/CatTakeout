@@ -1,5 +1,6 @@
 package com.nwafu.cattakeout.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.nwafu.cattakeout.common.Result;
@@ -10,8 +11,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/setmeal")
+@RequestMapping("/setMeal")
 @Slf4j
 public class SetMealController {
     @Autowired
@@ -76,5 +79,13 @@ public class SetMealController {
     public Result update(@RequestBody SetMealDTO setMealDTO){
         setMealService.updateWithDish(setMealDTO);
         return Result.success();
+    }
+
+    @GetMapping("/list")
+    public Result list(Long categoryId){
+        LambdaQueryWrapper<SetMeal> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(SetMeal::getCategoryId,categoryId);
+        List<SetMeal> lists = setMealService.list(queryWrapper);
+        return Result.success(lists);
     }
 }

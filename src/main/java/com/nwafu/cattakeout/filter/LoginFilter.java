@@ -1,11 +1,14 @@
 package com.nwafu.cattakeout.filter;
 
+import com.alibaba.fastjson.JSON;
+import com.nwafu.cattakeout.common.Result;
 import com.nwafu.cattakeout.common.UserHolder;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.AntPathMatcher;
 
 import java.io.IOException;
 
@@ -15,6 +18,9 @@ import java.io.IOException;
 @Slf4j
 @WebFilter(filterName = "LoginFilter" ,urlPatterns = "/*")
 public class LoginFilter implements Filter {
+    //路径匹配器，支持通配符
+    public static final AntPathMatcher PATH_MATCHER = new AntPathMatcher();
+
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         Filter.super.init(filterConfig);
@@ -27,34 +33,67 @@ public class LoginFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
-        HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
+        HttpServletRequest request = (HttpServletRequest) servletRequest;
+        HttpServletResponse response = (HttpServletResponse) servletResponse;
 
+        String requestURI = request.getRequestURI();
+        log.info("拦截到请求：{}",requestURI);
 
-        // 测试代码
-        if(1 == 1){
-            Object emp = httpServletRequest.getSession().getAttribute("employee");
-            // 登录界面，放行
-            if(httpServletRequest.getRequestURI().contains("login")){
-                log.info("登录界面，放行");
-                filterChain.doFilter(servletRequest,servletResponse);
-                return;
-            }
+        //定义不需要处理的请求路径
+        String[] urls = new String[]{
+                "/employee/login",
+                "/employee/logout",
+                "/backend/**",
+                "/front/**",
+                "/common/**",
+                "/user/sendMsg",
+                "/user/login"
+        };
 
-            if(emp==null){
-                log.info("未登录，重定向到登录界面");
-                httpServletResponse.sendRedirect("/backend/page/login/login.html");
-            }else{
-                log.info("用户名：{}，登录成功",emp);
-                UserHolder.set((Long)emp);
-                filterChain.doFilter(servletRequest,servletResponse);
-            }
-        }else{
-            filterChain.doFilter(servletRequest,servletResponse);
-            return ;
+        //2、判断本次请求是否需要处理
+        boolean check = check(urls, requestURI);
+
+        //3、如果不需要处理，则直接放行
+        if(check){
+            log.info("本次请求{}不需要处理",requestURI);
+            filterChain.doFilter(request,response);
+            return;
         }
 
+        //4-1、判断登录状态，如果已登录，则直接放行
+        if(request.getSession().getAttribute("employee") != null){
+            log.info("用户已登录，用户id为：{}",request.getSession().getAttribute("employee"));
 
+            Long empId = (Long) request.getSession().getAttribute("employee");
+            UserHolder.set(empId);
 
+            filterChain.doFilter(request,response);
+            return;
+        }
+
+        //4-2、判断登录状态，如果已登录，则直接放行
+        if(request.getSession().getAttribute("user") != null){
+            log.info("用户已登录，用户id为：{}",request.getSession().getAttribute("user"));
+
+            Long userId = (Long) request.getSession().getAttribute("user");
+            UserHolder.set(userId);
+
+            filterChain.doFilter(request,response);
+            return;
+        }
+
+        log.info("用户未登录");
+        //5、如果未登录则返回未登录结果，通过输出流方式向客户端页面响应数据
+        response.getWriter().write(JSON.toJSONString(Result.error("NOTLOGIN")));
+    }
+
+    public boolean check(String[] urls,String requestURI){
+        for (String url : urls) {
+            boolean match = PATH_MATCHER.match(url, requestURI);
+            if(match){
+                return true;
+            }
+        }
+        return false;
     }
 }

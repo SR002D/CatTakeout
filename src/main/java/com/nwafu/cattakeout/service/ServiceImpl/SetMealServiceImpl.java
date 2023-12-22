@@ -45,8 +45,9 @@ public class SetMealServiceImpl extends ServiceImpl<SetMealMapper, SetMeal> impl
         //查询当前套餐对应菜品，从set_meal_dish表查询
         LambdaQueryWrapper<SetMealDish> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(SetMealDish::getSetMealId, id);
+        queryWrapper.eq(SetMealDish::getIsDeleted, 0);
         List<SetMealDish> setMealDishes = setMealDishService.list(queryWrapper);
-        setMealDTO.setSetmealDishes(setMealDishes);
+        setMealDTO.setSetMealDishes(setMealDishes);
         log.info("setMealDTO:{},{}",setMealDTO.getId(),setMealDTO.getName());
         return setMealDTO;
     }
@@ -59,7 +60,7 @@ public class SetMealServiceImpl extends ServiceImpl<SetMealMapper, SetMeal> impl
         this.save(setMealDTO);
         Long setMealId = setMealDTO.getId();//套餐id
         //套餐菜品
-        List<SetMealDish> setMealDTODishes = setMealDTO.getSetmealDishes();
+        List<SetMealDish> setMealDTODishes = setMealDTO.getSetMealDishes();
         setMealDTODishes = setMealDTODishes.stream().peek((item) -> item.setSetMealId(setMealId)).collect(Collectors.toList());
         log.info("setMealDishes:{}",setMealDTODishes);
         //保存菜品数据到套餐菜品表set_meal_dish
@@ -79,7 +80,7 @@ public class SetMealServiceImpl extends ServiceImpl<SetMealMapper, SetMeal> impl
         setMealDishes = setMealDishes.stream().peek((item) -> item.setIsDeleted(1)).collect(Collectors.toList());
         setMealDishService.updateBatchById(setMealDishes);
         // 保存最新的套餐菜品
-        List<SetMealDish> setMealDishes2 = setMealDTO.getSetmealDishes();
+        List<SetMealDish> setMealDishes2 = setMealDTO.getSetMealDishes();
         // 更新setMealId
         setMealDishes2 = setMealDishes2.stream().peek((item) -> item.setSetMealId(setMealDTO.getId())).collect(Collectors.toList());
         log.info("setMeadDishes:{}",setMealDishes2);

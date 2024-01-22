@@ -26,4 +26,10 @@ public interface IDishService extends IService<Dish> {
      */
     void saveWithFlavor(DishDTO dishDTO);
 
+    /**
+     * 更新带口味的菜品
+     * @param dishDTO 带口味的菜品
+     */
+    void updateWithFlavor(DishDTO dishDTO);
+
 }

@@ -80,9 +80,9 @@ public class DishController {
      * 更新菜品
      */
     @PutMapping()
-    public Result update(@RequestBody Dish dish){
-        log.info("更新菜品：{}",dish);
-        dishService.updateById(dish);
+    public Result update(@RequestBody DishDTO dishDTO){
+        log.info("更新菜品：{}",dishDTO);
+        dishService.updateWithFlavor(dishDTO);
         return Result.success();
     }
 
@@ -105,6 +105,11 @@ public class DishController {
         return Result.success(dishDTO);
     }
 
+    /**
+     * 未知
+     * @param dish
+     * @return
+     */
     @GetMapping("/list")
     public Result list(Dish dish){
         //构造查询条件

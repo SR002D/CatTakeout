@@ -1,9 +1,11 @@
 package com.nwafu.cattakeout.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.nwafu.cattakeout.pojo.OrderDetail;
+
+import com.nwafu.cattakeout.entity.OrderDetail;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface OrderDetailMapper extends BaseMapper<OrderDetail> {
+
 }

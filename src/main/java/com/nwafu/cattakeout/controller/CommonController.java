@@ -1,14 +1,17 @@
 package com.nwafu.cattakeout.controller;
 
-import com.nwafu.cattakeout.common.Result;
-import jakarta.servlet.ServletOutputStream;
-import jakarta.servlet.http.HttpServletResponse;
+
+import com.nwafu.cattakeout.common.R;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.UUID;
 
@@ -20,14 +23,16 @@ import java.util.UUID;
 @Slf4j
 public class CommonController {
 
-    @Value("${cat.path}")
+    @Value("${reggie.path}")
     private String basePath;
 
     /**
      * 文件上传
+     * @param file
+     * @return
      */
     @PostMapping("/upload")
-    public Result upload(MultipartFile file){
+    public R<String> upload(MultipartFile file){
         //file是一个临时文件，需要转存到指定位置，否则本次请求完成后临时文件会删除
         log.info(file.toString());
 
@@ -52,15 +57,17 @@ public class CommonController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        log.info("fileName:"+fileName);
-        return Result.success((Object) fileName);
+        return R.success(fileName);
     }
 
     /**
      * 文件下载
+     * @param name
+     * @param response
      */
     @GetMapping("/download")
     public void download(String name, HttpServletResponse response){
+
         try {
             //输入流，通过输入流读取文件内容
             FileInputStream fileInputStream = new FileInputStream(new File(basePath + name));

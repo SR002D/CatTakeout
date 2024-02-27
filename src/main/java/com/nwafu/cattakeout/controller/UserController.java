@@ -1,45 +1,65 @@
 package com.nwafu.cattakeout.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.nwafu.cattakeout.common.Result;
-import com.nwafu.cattakeout.pojo.User;
-import com.nwafu.cattakeout.service.IUserService;
-import com.nwafu.cattakeout.util.ValidateCodeUtil;
-import jakarta.servlet.http.HttpSession;
+
+import com.nwafu.cattakeout.common.R;
+import com.nwafu.cattakeout.entity.User;
+import com.nwafu.cattakeout.service.UserService;
+import com.nwafu.cattakeout.utils.ValidateCodeUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpSession;
 import java.util.Map;
 
-@Slf4j
 @RestController
 @RequestMapping("/user")
+@Slf4j
 public class UserController {
+
     @Autowired
-    private IUserService userService;
+    private UserService userService;
 
-
+    /**
+     * 发送手机短信验证码
+     * @param user
+     * @return
+     */
     @PostMapping("/sendMsg")
-    public Result sendMsg(@RequestBody User user, HttpSession session){
+    public R<String> sendMsg(@RequestBody User user, HttpSession session){
+        //获取手机号
         String phone = user.getPhone();
 
-        if(phone!=null&&!phone.isEmpty()){
-            String code = ValidateCodeUtil.generateValidateCode(4).toString();
+        if(StringUtils.isNotEmpty(phone)){
+            //生成随机的4位验证码
+            String code = ValidateCodeUtils.generateValidateCode(4).toString();
             log.info("code={}",code);
 
+            //调用阿里云提供的短信服务API完成发送短信
+            //SMSUtils.sendMessage("瑞吉外卖","",phone,code);
+
+            //需要将生成的验证码保存到Session
             session.setAttribute(phone,code);
 
-            return Result.success("手机验证码短信发送成功");
+            return R.success("手机验证码短信发送成功");
         }
-        return Result.error("手机验证码短信发送失败");
+
+        return R.error("短信发送失败");
     }
 
+    /**
+     * 移动端用户登录
+     * @param map
+     * @param session
+     * @return
+     */
     @PostMapping("/login")
-    public Result login(@RequestBody Map map, HttpSession session){
+    public R<User> login(@RequestBody Map map, HttpSession session){
         log.info(map.toString());
 
         //获取手机号
@@ -67,8 +87,9 @@ public class UserController {
                 userService.save(user);
             }
             session.setAttribute("user",user.getId());
-            return Result.success(user);
+            return R.success(user);
         }
-        return Result.error("登录失败");
+        return R.error("登录失败");
     }
+
 }

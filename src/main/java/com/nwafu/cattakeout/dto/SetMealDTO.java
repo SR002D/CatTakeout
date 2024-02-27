@@ -1,15 +1,15 @@
 package com.nwafu.cattakeout.dto;
 
-import com.nwafu.cattakeout.pojo.SetMeal;
-import com.nwafu.cattakeout.pojo.SetMealDish;
-import lombok.Data;
 
-import java.util.ArrayList;
+import com.nwafu.cattakeout.entity.Setmeal;
+import com.nwafu.cattakeout.entity.SetmealDish;
+import lombok.Data;
 import java.util.List;
 
 @Data
-public class SetMealDTO extends  SetMeal {
-    private List<SetMealDish> setMealDishes= new ArrayList<>();
+public class SetmealDto extends Setmeal {
+
+    private List<SetmealDish> setmealDishes;
+
     private String categoryName;
-    private Integer copies;
 }

@@ -1,4 +1,6 @@
+create schema  cat_takeout;
 use cat_takeout;
+
 SET FOREIGN_KEY_CHECKS=0;
 
 -- ----------------------------
@@ -6,26 +8,26 @@ SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------
 DROP TABLE IF EXISTS `address_book`;
 CREATE TABLE `address_book` (
-  `id` bigint(20) NOT NULL COMMENT '主键',
-  `user_id` bigint(20) NOT NULL COMMENT '用户id',
-  `consignee` varchar(50) COLLATE utf8_bin NOT NULL COMMENT '收货人',
-  `sex` tinyint(4) NOT NULL COMMENT '性别 0 女 1 男',
-  `phone` varchar(11) COLLATE utf8_bin NOT NULL COMMENT '手机号',
-  `province_code` varchar(12) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '省级区划编号',
-  `province_name` varchar(32) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '省级名称',
-  `city_code` varchar(12) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '市级区划编号',
-  `city_name` varchar(32) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '市级名称',
-  `district_code` varchar(12) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '区级区划编号',
-  `district_name` varchar(32) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '区级名称',
-  `detail` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '详细地址',
-  `label` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '标签',
-  `is_default` tinyint(1) NOT NULL DEFAULT '0' COMMENT '默认 0 否 1是',
-  `create_time` datetime NOT NULL COMMENT '创建时间',
-  `update_time` datetime NOT NULL COMMENT '更新时间',
-  `create_user` bigint(20) NOT NULL COMMENT '创建人',
-  `update_user` bigint(20) NOT NULL COMMENT '修改人',
-  `is_deleted` int(11) NOT NULL DEFAULT '0' COMMENT '是否删除',
-  PRIMARY KEY (`id`) USING BTREE
+                                `id` bigint(20) NOT NULL COMMENT '主键',
+                                `user_id` bigint(20) NOT NULL COMMENT '用户id',
+                                `consignee` varchar(50) COLLATE utf8_bin NOT NULL COMMENT '收货人',
+                                `sex` tinyint(4) NOT NULL COMMENT '性别 0 女 1 男',
+                                `phone` varchar(11) COLLATE utf8_bin NOT NULL COMMENT '手机号',
+                                `province_code` varchar(12) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '省级区划编号',
+                                `province_name` varchar(32) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '省级名称',
+                                `city_code` varchar(12) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '市级区划编号',
+                                `city_name` varchar(32) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '市级名称',
+                                `district_code` varchar(12) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '区级区划编号',
+                                `district_name` varchar(32) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '区级名称',
+                                `detail` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '详细地址',
+                                `label` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '标签',
+                                `is_default` tinyint(1) NOT NULL DEFAULT '0' COMMENT '默认 0 否 1是',
+                                `create_time` datetime NOT NULL COMMENT '创建时间',
+                                `update_time` datetime NOT NULL COMMENT '更新时间',
+                                `create_user` bigint(20) NOT NULL COMMENT '创建人',
+                                `update_user` bigint(20) NOT NULL COMMENT '修改人',
+                                `is_deleted` int(11) NOT NULL DEFAULT '0' COMMENT '是否删除',
+                                PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='地址管理';
 
 -- ----------------------------
@@ -39,16 +41,16 @@ INSERT INTO `address_book` VALUES ('1417414926166769666', '1417012167126876162',
 -- ----------------------------
 DROP TABLE IF EXISTS `category`;
 CREATE TABLE `category` (
-  `id` bigint(20) NOT NULL COMMENT '主键',
-  `type` int(11) DEFAULT NULL COMMENT '类型   1 菜品分类 2 套餐分类',
-  `name` varchar(64) COLLATE utf8_bin NOT NULL COMMENT '分类名称',
-  `sort` int(11) NOT NULL DEFAULT '0' COMMENT '顺序',
-  `create_time` datetime NOT NULL COMMENT '创建时间',
-  `update_time` datetime NOT NULL COMMENT '更新时间',
-  `create_user` bigint(20) NOT NULL COMMENT '创建人',
-  `update_user` bigint(20) NOT NULL COMMENT '修改人',
-  PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE KEY `idx_category_name` (`name`)
+                            `id` bigint(20) NOT NULL COMMENT '主键',
+                            `type` int(11) DEFAULT NULL COMMENT '类型   1 菜品分类 2 套餐分类',
+                            `name` varchar(64) COLLATE utf8_bin NOT NULL COMMENT '分类名称',
+                            `sort` int(11) NOT NULL DEFAULT '0' COMMENT '顺序',
+                            `create_time` datetime NOT NULL COMMENT '创建时间',
+                            `update_time` datetime NOT NULL COMMENT '更新时间',
+                            `create_user` bigint(20) NOT NULL COMMENT '创建人',
+                            `update_user` bigint(20) NOT NULL COMMENT '修改人',
+                            PRIMARY KEY (`id`) USING BTREE,
+                            UNIQUE KEY `idx_category_name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='菜品及套餐分类';
 
 -- ----------------------------
@@ -67,22 +69,22 @@ INSERT INTO `category` VALUES ('1413386191767674881', '2', '儿童套餐', '6', 
 -- ----------------------------
 DROP TABLE IF EXISTS `dish`;
 CREATE TABLE `dish` (
-  `id` bigint(20) NOT NULL COMMENT '主键',
-  `name` varchar(64) COLLATE utf8_bin NOT NULL COMMENT '菜品名称',
-  `category_id` bigint(20) NOT NULL COMMENT '菜品分类id',
-  `price` decimal(10,2) DEFAULT NULL COMMENT '菜品价格',
-  `code` varchar(64) COLLATE utf8_bin NOT NULL COMMENT '商品码',
-  `image` varchar(200) COLLATE utf8_bin NOT NULL COMMENT '图片',
-  `description` varchar(400) COLLATE utf8_bin DEFAULT NULL COMMENT '描述信息',
-  `status` int(11) NOT NULL DEFAULT '1' COMMENT '0 停售 1 起售',
-  `sort` int(11) NOT NULL DEFAULT '0' COMMENT '顺序',
-  `create_time` datetime NOT NULL COMMENT '创建时间',
-  `update_time` datetime NOT NULL COMMENT '更新时间',
-  `create_user` bigint(20) NOT NULL COMMENT '创建人',
-  `update_user` bigint(20) NOT NULL COMMENT '修改人',
-  `is_deleted` int(11) NOT NULL DEFAULT '0' COMMENT '是否删除',
-  PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE KEY `idx_dish_name` (`name`)
+                        `id` bigint(20) NOT NULL COMMENT '主键',
+                        `name` varchar(64) COLLATE utf8_bin NOT NULL COMMENT '菜品名称',
+                        `category_id` bigint(20) NOT NULL COMMENT '菜品分类id',
+                        `price` decimal(10,2) DEFAULT NULL COMMENT '菜品价格',
+                        `code` varchar(64) COLLATE utf8_bin NOT NULL COMMENT '商品码',
+                        `image` varchar(200) COLLATE utf8_bin NOT NULL COMMENT '图片',
+                        `description` varchar(400) COLLATE utf8_bin DEFAULT NULL COMMENT '描述信息',
+                        `status` int(11) NOT NULL DEFAULT '1' COMMENT '0 停售 1 起售',
+                        `sort` int(11) NOT NULL DEFAULT '0' COMMENT '顺序',
+                        `create_time` datetime NOT NULL COMMENT '创建时间',
+                        `update_time` datetime NOT NULL COMMENT '更新时间',
+                        `create_user` bigint(20) NOT NULL COMMENT '创建人',
+                        `update_user` bigint(20) NOT NULL COMMENT '修改人',
+                        `is_deleted` int(11) NOT NULL DEFAULT '0' COMMENT '是否删除',
+                        PRIMARY KEY (`id`) USING BTREE,
+                        UNIQUE KEY `idx_dish_name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='菜品管理';
 
 -- ----------------------------
@@ -117,16 +119,16 @@ INSERT INTO `dish` VALUES ('1413385247889891330', '米饭', '1413384954989060097
 -- ----------------------------
 DROP TABLE IF EXISTS `dish_flavor`;
 CREATE TABLE `dish_flavor` (
-  `id` bigint(20) NOT NULL COMMENT '主键',
-  `dish_id` bigint(20) NOT NULL COMMENT '菜品',
-  `name` varchar(64) COLLATE utf8_bin NOT NULL COMMENT '口味名称',
-  `value` varchar(500) COLLATE utf8_bin DEFAULT NULL COMMENT '口味数据list',
-  `create_time` datetime NOT NULL COMMENT '创建时间',
-  `update_time` datetime NOT NULL COMMENT '更新时间',
-  `create_user` bigint(20) NOT NULL COMMENT '创建人',
-  `update_user` bigint(20) NOT NULL COMMENT '修改人',
-  `is_deleted` int(11) NOT NULL DEFAULT '0' COMMENT '是否删除',
-  PRIMARY KEY (`id`) USING BTREE
+                               `id` bigint(20) NOT NULL COMMENT '主键',
+                               `dish_id` bigint(20) NOT NULL COMMENT '菜品',
+                               `name` varchar(64) COLLATE utf8_bin NOT NULL COMMENT '口味名称',
+                               `value` varchar(500) COLLATE utf8_bin DEFAULT NULL COMMENT '口味数据list',
+                               `create_time` datetime NOT NULL COMMENT '创建时间',
+                               `update_time` datetime NOT NULL COMMENT '更新时间',
+                               `create_user` bigint(20) NOT NULL COMMENT '创建人',
+                               `update_user` bigint(20) NOT NULL COMMENT '修改人',
+                               `is_deleted` int(11) NOT NULL DEFAULT '0' COMMENT '是否删除',
+                               PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='菜品口味关系表';
 
 -- ----------------------------
@@ -201,20 +203,20 @@ INSERT INTO `dish_flavor` VALUES ('1413389684020682754', '1413342036832100354', 
 -- ----------------------------
 DROP TABLE IF EXISTS `employee`;
 CREATE TABLE `employee` (
-  `id` bigint(20) NOT NULL COMMENT '主键',
-  `name` varchar(32) COLLATE utf8_bin NOT NULL COMMENT '姓名',
-  `username` varchar(32) COLLATE utf8_bin NOT NULL COMMENT '用户名',
-  `password` varchar(64) COLLATE utf8_bin NOT NULL COMMENT '密码',
-  `phone` varchar(11) COLLATE utf8_bin NOT NULL COMMENT '手机号',
-  `sex` varchar(2) COLLATE utf8_bin NOT NULL COMMENT '性别',
-  `id_number` varchar(18) COLLATE utf8_bin NOT NULL COMMENT '身份证号',
-  `status` int(11) NOT NULL DEFAULT '1' COMMENT '状态 0:禁用，1:正常',
-  `create_time` datetime NOT NULL COMMENT '创建时间',
-  `update_time` datetime NOT NULL COMMENT '更新时间',
-  `create_user` bigint(20) NOT NULL COMMENT '创建人',
-  `update_user` bigint(20) NOT NULL COMMENT '修改人',
-  PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE KEY `idx_username` (`username`)
+                            `id` bigint(20) NOT NULL COMMENT '主键',
+                            `name` varchar(32) COLLATE utf8_bin NOT NULL COMMENT '姓名',
+                            `username` varchar(32) COLLATE utf8_bin NOT NULL COMMENT '用户名',
+                            `password` varchar(64) COLLATE utf8_bin NOT NULL COMMENT '密码',
+                            `phone` varchar(11) COLLATE utf8_bin NOT NULL COMMENT '手机号',
+                            `sex` varchar(2) COLLATE utf8_bin NOT NULL COMMENT '性别',
+                            `id_number` varchar(18) COLLATE utf8_bin NOT NULL COMMENT '身份证号',
+                            `status` int(11) NOT NULL DEFAULT '1' COMMENT '状态 0:禁用，1:正常',
+                            `create_time` datetime NOT NULL COMMENT '创建时间',
+                            `update_time` datetime NOT NULL COMMENT '更新时间',
+                            `create_user` bigint(20) NOT NULL COMMENT '创建人',
+                            `update_user` bigint(20) NOT NULL COMMENT '修改人',
+                            PRIMARY KEY (`id`) USING BTREE,
+                            UNIQUE KEY `idx_username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='员工信息';
 
 -- ----------------------------
@@ -227,21 +229,21 @@ INSERT INTO `employee` VALUES ('1', '管理员', 'admin', 'e10adc3949ba59abbe56e
 -- ----------------------------
 DROP TABLE IF EXISTS `orders`;
 CREATE TABLE `orders` (
-  `id` bigint(20) NOT NULL COMMENT '主键',
-  `number` varchar(50) COLLATE utf8_bin DEFAULT NULL COMMENT '订单号',
-  `status` int(11) NOT NULL DEFAULT '1' COMMENT '订单状态 1待付款，2待派送，3已派送，4已完成，5已取消',
-  `user_id` bigint(20) NOT NULL COMMENT '下单用户',
-  `address_book_id` bigint(20) NOT NULL COMMENT '地址id',
-  `order_time` datetime NOT NULL COMMENT '下单时间',
-  `checkout_time` datetime NOT NULL COMMENT '结账时间',
-  `pay_method` int(11) NOT NULL DEFAULT '1' COMMENT '支付方式 1微信,2支付宝',
-  `amount` decimal(10,2) NOT NULL COMMENT '实收金额',
-  `remark` varchar(100) COLLATE utf8_bin DEFAULT NULL COMMENT '备注',
-  `phone` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `address` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `user_name` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `consignee` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  PRIMARY KEY (`id`) USING BTREE
+                          `id` bigint(20) NOT NULL COMMENT '主键',
+                          `number` varchar(50) COLLATE utf8_bin DEFAULT NULL COMMENT '订单号',
+                          `status` int(11) NOT NULL DEFAULT '1' COMMENT '订单状态 1待付款，2待派送，3已派送，4已完成，5已取消',
+                          `user_id` bigint(20) NOT NULL COMMENT '下单用户',
+                          `address_book_id` bigint(20) NOT NULL COMMENT '地址id',
+                          `order_time` datetime NOT NULL COMMENT '下单时间',
+                          `checkout_time` datetime NOT NULL COMMENT '结账时间',
+                          `pay_method` int(11) NOT NULL DEFAULT '1' COMMENT '支付方式 1微信,2支付宝',
+                          `amount` decimal(10,2) NOT NULL COMMENT '实收金额',
+                          `remark` varchar(100) COLLATE utf8_bin DEFAULT NULL COMMENT '备注',
+                          `phone` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+                          `address` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+                          `user_name` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+                          `consignee` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+                          PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='订单表';
 
 -- ----------------------------
@@ -253,16 +255,16 @@ CREATE TABLE `orders` (
 -- ----------------------------
 DROP TABLE IF EXISTS `order_detail`;
 CREATE TABLE `order_detail` (
-  `id` bigint(20) NOT NULL COMMENT '主键',
-  `name` varchar(50) COLLATE utf8_bin DEFAULT NULL COMMENT '名字',
-  `image` varchar(100) COLLATE utf8_bin DEFAULT NULL COMMENT '图片',
-  `order_id` bigint(20) NOT NULL COMMENT '订单id',
-  `dish_id` bigint(20) DEFAULT NULL COMMENT '菜品id',
-  `setmeal_id` bigint(20) DEFAULT NULL COMMENT '套餐id',
-  `dish_flavor` varchar(50) COLLATE utf8_bin DEFAULT NULL COMMENT '口味',
-  `number` int(11) NOT NULL DEFAULT '1' COMMENT '数量',
-  `amount` decimal(10,2) NOT NULL COMMENT '金额',
-  PRIMARY KEY (`id`) USING BTREE
+                                `id` bigint(20) NOT NULL COMMENT '主键',
+                                `name` varchar(50) COLLATE utf8_bin DEFAULT NULL COMMENT '名字',
+                                `image` varchar(100) COLLATE utf8_bin DEFAULT NULL COMMENT '图片',
+                                `order_id` bigint(20) NOT NULL COMMENT '订单id',
+                                `dish_id` bigint(20) DEFAULT NULL COMMENT '菜品id',
+                                `setmeal_id` bigint(20) DEFAULT NULL COMMENT '套餐id',
+                                `dish_flavor` varchar(50) COLLATE utf8_bin DEFAULT NULL COMMENT '口味',
+                                `number` int(11) NOT NULL DEFAULT '1' COMMENT '数量',
+                                `amount` decimal(10,2) NOT NULL COMMENT '金额',
+                                PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='订单明细表';
 
 -- ----------------------------
@@ -272,73 +274,73 @@ CREATE TABLE `order_detail` (
 -- ----------------------------
 -- Table structure for setmeal
 -- ----------------------------
-DROP TABLE IF EXISTS set_meal;
+DROP TABLE IF EXISTS `setmeal`;
 CREATE TABLE `setmeal` (
-  `id` bigint(20) NOT NULL COMMENT '主键',
-  `category_id` bigint(20) NOT NULL COMMENT '菜品分类id',
-  `name` varchar(64) COLLATE utf8_bin NOT NULL COMMENT '套餐名称',
-  `price` decimal(10,2) NOT NULL COMMENT '套餐价格',
-  `status` int(11) DEFAULT NULL COMMENT '状态 0:停用 1:启用',
-  `code` varchar(32) COLLATE utf8_bin DEFAULT NULL COMMENT '编码',
-  `description` varchar(512) COLLATE utf8_bin DEFAULT NULL COMMENT '描述信息',
-  `image` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT '图片',
-  `create_time` datetime NOT NULL COMMENT '创建时间',
-  `update_time` datetime NOT NULL COMMENT '更新时间',
-  `create_user` bigint(20) NOT NULL COMMENT '创建人',
-  `update_user` bigint(20) NOT NULL COMMENT '修改人',
-  `is_deleted` int(11) NOT NULL DEFAULT '0' COMMENT '是否删除',
-  PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE KEY `idx_setmeal_name` (`name`)
+                           `id` bigint(20) NOT NULL COMMENT '主键',
+                           `category_id` bigint(20) NOT NULL COMMENT '菜品分类id',
+                           `name` varchar(64) COLLATE utf8_bin NOT NULL COMMENT '套餐名称',
+                           `price` decimal(10,2) NOT NULL COMMENT '套餐价格',
+                           `status` int(11) DEFAULT NULL COMMENT '状态 0:停用 1:启用',
+                           `code` varchar(32) COLLATE utf8_bin DEFAULT NULL COMMENT '编码',
+                           `description` varchar(512) COLLATE utf8_bin DEFAULT NULL COMMENT '描述信息',
+                           `image` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT '图片',
+                           `create_time` datetime NOT NULL COMMENT '创建时间',
+                           `update_time` datetime NOT NULL COMMENT '更新时间',
+                           `create_user` bigint(20) NOT NULL COMMENT '创建人',
+                           `update_user` bigint(20) NOT NULL COMMENT '修改人',
+                           `is_deleted` int(11) NOT NULL DEFAULT '0' COMMENT '是否删除',
+                           PRIMARY KEY (`id`) USING BTREE,
+                           UNIQUE KEY `idx_setmeal_name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='套餐';
 
 -- ----------------------------
 -- Records of setmeal
 -- ----------------------------
-INSERT INTO set_meal VALUES ('1415580119015145474', '1413386191767674881', '儿童套餐A计划', '4000.00', '1', '', '', '61d20592-b37f-4d72-a864-07ad5bb8f3bb.jpg', '2021-07-15 15:52:55', '2021-07-15 15:52:55', '1415576781934608386', '1415576781934608386', '0');
+INSERT INTO `setmeal` VALUES ('1415580119015145474', '1413386191767674881', '儿童套餐A计划', '4000.00', '1', '', '', '61d20592-b37f-4d72-a864-07ad5bb8f3bb.jpg', '2021-07-15 15:52:55', '2021-07-15 15:52:55', '1415576781934608386', '1415576781934608386', '0');
 
 -- ----------------------------
 -- Table structure for setmeal_dish
 -- ----------------------------
-DROP TABLE IF EXISTS set_meal_dish;
+DROP TABLE IF EXISTS `setmeal_dish`;
 CREATE TABLE `setmeal_dish` (
-  `id` bigint(20) NOT NULL COMMENT '主键',
-  `setmeal_id` varchar(32) COLLATE utf8_bin NOT NULL COMMENT '套餐id ',
-  `dish_id` varchar(32) COLLATE utf8_bin NOT NULL COMMENT '菜品id',
-  `name` varchar(32) COLLATE utf8_bin DEFAULT NULL COMMENT '菜品名称 （冗余字段）',
-  `price` decimal(10,2) DEFAULT NULL COMMENT '菜品原价（冗余字段）',
-  `copies` int(11) NOT NULL COMMENT '份数',
-  `sort` int(11) NOT NULL DEFAULT '0' COMMENT '排序',
-  `create_time` datetime NOT NULL COMMENT '创建时间',
-  `update_time` datetime NOT NULL COMMENT '更新时间',
-  `create_user` bigint(20) NOT NULL COMMENT '创建人',
-  `update_user` bigint(20) NOT NULL COMMENT '修改人',
-  `is_deleted` int(11) NOT NULL DEFAULT '0' COMMENT '是否删除',
-  PRIMARY KEY (`id`) USING BTREE
+                                `id` bigint(20) NOT NULL COMMENT '主键',
+                                `setmeal_id` varchar(32) COLLATE utf8_bin NOT NULL COMMENT '套餐id ',
+                                `dish_id` varchar(32) COLLATE utf8_bin NOT NULL COMMENT '菜品id',
+                                `name` varchar(32) COLLATE utf8_bin DEFAULT NULL COMMENT '菜品名称 （冗余字段）',
+                                `price` decimal(10,2) DEFAULT NULL COMMENT '菜品原价（冗余字段）',
+                                `copies` int(11) NOT NULL COMMENT '份数',
+                                `sort` int(11) NOT NULL DEFAULT '0' COMMENT '排序',
+                                `create_time` datetime NOT NULL COMMENT '创建时间',
+                                `update_time` datetime NOT NULL COMMENT '更新时间',
+                                `create_user` bigint(20) NOT NULL COMMENT '创建人',
+                                `update_user` bigint(20) NOT NULL COMMENT '修改人',
+                                `is_deleted` int(11) NOT NULL DEFAULT '0' COMMENT '是否删除',
+                                PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='套餐菜品关系';
 
 -- ----------------------------
 -- Records of setmeal_dish
 -- ----------------------------
-INSERT INTO set_meal_dish VALUES ('1415580119052894209', '1415580119015145474', '1397862198033297410', '老火靓汤', '49800.00', '1', '0', '2021-07-15 15:52:55', '2021-07-15 15:52:55', '1415576781934608386', '1415576781934608386', '0');
-INSERT INTO set_meal_dish VALUES ('1415580119061282817', '1415580119015145474', '1413342036832100354', '北冰洋', '500.00', '1', '0', '2021-07-15 15:52:55', '2021-07-15 15:52:55', '1415576781934608386', '1415576781934608386', '0');
-INSERT INTO set_meal_dish VALUES ('1415580119069671426', '1415580119015145474', '1413385247889891330', '米饭', '200.00', '1', '0', '2021-07-15 15:52:55', '2021-07-15 15:52:55', '1415576781934608386', '1415576781934608386', '0');
+INSERT INTO `setmeal_dish` VALUES ('1415580119052894209', '1415580119015145474', '1397862198033297410', '老火靓汤', '49800.00', '1', '0', '2021-07-15 15:52:55', '2021-07-15 15:52:55', '1415576781934608386', '1415576781934608386', '0');
+INSERT INTO `setmeal_dish` VALUES ('1415580119061282817', '1415580119015145474', '1413342036832100354', '北冰洋', '500.00', '1', '0', '2021-07-15 15:52:55', '2021-07-15 15:52:55', '1415576781934608386', '1415576781934608386', '0');
+INSERT INTO `setmeal_dish` VALUES ('1415580119069671426', '1415580119015145474', '1413385247889891330', '米饭', '200.00', '1', '0', '2021-07-15 15:52:55', '2021-07-15 15:52:55', '1415576781934608386', '1415576781934608386', '0');
 
 -- ----------------------------
 -- Table structure for shopping_cart
 -- ----------------------------
 DROP TABLE IF EXISTS `shopping_cart`;
 CREATE TABLE `shopping_cart` (
-  `id` bigint(20) NOT NULL COMMENT '主键',
-  `name` varchar(50) COLLATE utf8_bin DEFAULT NULL COMMENT '名称',
-  `image` varchar(100) COLLATE utf8_bin DEFAULT NULL COMMENT '图片',
-  `user_id` bigint(20) NOT NULL COMMENT '主键',
-  `dish_id` bigint(20) DEFAULT NULL COMMENT '菜品id',
-  `setmeal_id` bigint(20) DEFAULT NULL COMMENT '套餐id',
-  `dish_flavor` varchar(50) COLLATE utf8_bin DEFAULT NULL COMMENT '口味',
-  `number` int(11) NOT NULL DEFAULT '1' COMMENT '数量',
-  `amount` decimal(10,2) NOT NULL COMMENT '金额',
-  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
-  PRIMARY KEY (`id`) USING BTREE
+                                 `id` bigint(20) NOT NULL COMMENT '主键',
+                                 `name` varchar(50) COLLATE utf8_bin DEFAULT NULL COMMENT '名称',
+                                 `image` varchar(100) COLLATE utf8_bin DEFAULT NULL COMMENT '图片',
+                                 `user_id` bigint(20) NOT NULL COMMENT '主键',
+                                 `dish_id` bigint(20) DEFAULT NULL COMMENT '菜品id',
+                                 `setmeal_id` bigint(20) DEFAULT NULL COMMENT '套餐id',
+                                 `dish_flavor` varchar(50) COLLATE utf8_bin DEFAULT NULL COMMENT '口味',
+                                 `number` int(11) NOT NULL DEFAULT '1' COMMENT '数量',
+                                 `amount` decimal(10,2) NOT NULL COMMENT '金额',
+                                 `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+                                 PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='购物车';
 
 -- ----------------------------
@@ -350,12 +352,12 @@ CREATE TABLE `shopping_cart` (
 -- ----------------------------
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
-  `id` bigint(20) NOT NULL COMMENT '主键',
-  `name` varchar(50) COLLATE utf8_bin DEFAULT NULL COMMENT '姓名',
-  `phone` varchar(100) COLLATE utf8_bin NOT NULL COMMENT '手机号',
-  `sex` varchar(2) COLLATE utf8_bin DEFAULT NULL COMMENT '性别',
-  `id_number` varchar(18) COLLATE utf8_bin DEFAULT NULL COMMENT '身份证号',
-  `avatar` varchar(500) COLLATE utf8_bin DEFAULT NULL COMMENT '头像',
-  `status` int(11) DEFAULT '0' COMMENT '状态 0:禁用，1:正常',
-  PRIMARY KEY (`id`) USING BTREE
+                        `id` bigint(20) NOT NULL COMMENT '主键',
+                        `name` varchar(50) COLLATE utf8_bin DEFAULT NULL COMMENT '姓名',
+                        `phone` varchar(100) COLLATE utf8_bin NOT NULL COMMENT '手机号',
+                        `sex` varchar(2) COLLATE utf8_bin DEFAULT NULL COMMENT '性别',
+                        `id_number` varchar(18) COLLATE utf8_bin DEFAULT NULL COMMENT '身份证号',
+                        `avatar` varchar(500) COLLATE utf8_bin DEFAULT NULL COMMENT '头像',
+                        `status` int(11) DEFAULT '0' COMMENT '状态 0:禁用，1:正常',
+                        PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='用户信息';

@@ -1,7 +1,8 @@
 package com.nwafu.cattakeout.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.nwafu.cattakeout.pojo.DishFlavor;
+
+import com.nwafu.cattakeout.entity.DishFlavor;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper

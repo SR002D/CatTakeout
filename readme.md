@@ -4,7 +4,13 @@
 
 猫猫外卖（CatTakeout）是一个javaWeb的后端开发项目，使用技术栈为springboot+mybatisPlus，面向管理端和客户端
 
-### 功能
+### 技术
+
+- springboot2.4
+- mybatisPlus
+- redis
+- spring cache
+- 
 
 #### 管理端
 

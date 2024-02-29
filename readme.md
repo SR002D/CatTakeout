@@ -9,8 +9,9 @@
 - springboot2.4
 - mybatisPlus
 - redis
-- spring cache
-- 
+- spring cache整合redis实现缓存
+- mysql主从复制
+- sharding-JDBC读写分离
 
 #### 管理端
 

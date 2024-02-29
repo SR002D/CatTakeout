@@ -12,6 +12,8 @@
 - spring cache整合redis实现缓存
 - mysql主从复制
 - sharding-JDBC读写分离
+- 使用nginx进行反向代理，负载均衡
+- swagger生成接口文档
 
 #### 管理端
 
